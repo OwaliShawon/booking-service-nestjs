@@ -1,4 +1,8 @@
-import { Injectable } from '@nestjs/common';
+import {
+  Injectable,
+  InternalServerErrorException,
+  NotFoundException,
+} from '@nestjs/common';
 import { CreateServiceDto } from './dto/create-service.dto';
 import { UpdateServiceDto } from './dto/update-service.dto';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -13,25 +17,78 @@ export class ServicesService {
   ) {}
 
   async create(createServiceDto: CreateServiceDto) {
-    return await this.serviceRepo.save(createServiceDto);
+    try {
+      return await this.serviceRepo.save(createServiceDto);
+    } catch (error) {
+      throw new InternalServerErrorException(
+        'Failed to create service',
+        error.message,
+      );
+    }
   }
 
-  findAll(page: number = 1, limit: number = 10) {
-    return this.serviceRepo.find({
-      skip: (page - 1) * limit,
-      take: limit,
-    });
+  async findAll(page: number = 1, limit: number = 10) {
+    try {
+      return await this.serviceRepo.find({
+        skip: (page - 1) * limit,
+        take: limit,
+      });
+    } catch (error) {
+      throw new InternalServerErrorException(
+        'Failed to fetch services',
+        error.message,
+      );
+    }
   }
 
   async findOne(id: number) {
-    return await this.serviceRepo.findOneBy({ id });
+    try {
+      const service = await this.serviceRepo.findOneBy({ id });
+      if (!service) {
+        throw new NotFoundException(`Service with ID ${id} not found`);
+      }
+      return service;
+    } catch (error) {
+      throw error instanceof NotFoundException
+        ? error
+        : new InternalServerErrorException(
+            'Failed to fetch service',
+            error.message,
+          );
+    }
   }
 
   async update(id: number, updateServiceDto: UpdateServiceDto) {
-    return await this.serviceRepo.update(id, updateServiceDto);
+    try {
+      const result = await this.serviceRepo.update(id, updateServiceDto);
+      if (result.affected === 0) {
+        throw new NotFoundException(`Service with ID ${id} not found`);
+      }
+      return result;
+    } catch (error) {
+      throw error instanceof NotFoundException
+        ? error
+        : new InternalServerErrorException(
+            'Failed to update service',
+            error.message,
+          );
+    }
   }
 
   async remove(id: number) {
-    return await this.serviceRepo.delete(id);
+    try {
+      const result = await this.serviceRepo.delete(id);
+      if (result.affected === 0) {
+        throw new NotFoundException(`Service with ID ${id} not found`);
+      }
+      return result;
+    } catch (error) {
+      throw error instanceof NotFoundException
+        ? error
+        : new InternalServerErrorException(
+            'Failed to delete service',
+            error.message,
+          );
+    }
   }
 }
