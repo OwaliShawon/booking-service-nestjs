@@ -31,7 +31,7 @@ export class ServicesService {
     return await this.serviceRepo.update(id, updateServiceDto);
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} service`;
+  async remove(id: number) {
+    return await this.serviceRepo.delete(id);
   }
 }
