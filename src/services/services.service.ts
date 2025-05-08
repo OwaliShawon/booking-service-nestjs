@@ -16,8 +16,11 @@ export class ServicesService {
     return await this.serviceRepo.save(createServiceDto);
   }
 
-  findAll() {
-    return `This action returns all services`;
+  findAll(page: number = 1, limit: number = 10) {
+    return this.serviceRepo.find({
+      skip: (page - 1) * limit,
+      take: limit,
+    });
   }
 
   findOne(id: number) {
