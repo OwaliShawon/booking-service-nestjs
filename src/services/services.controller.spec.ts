@@ -12,7 +12,21 @@ describe('ServicesController', () => {
         id: 1,
         ...dto,
       })),
-      findAll: jest.fn().mockImplementation((page: number, limit: number) => []),
+      findAll: jest
+        .fn()
+        .mockImplementation((page: number, limit: number) => []),
+      findOne: jest.fn().mockImplementation((id: number) => ({
+        id,
+        name: 'Test Service',
+        category: 'Test Category',
+        price: 100,
+        description: 'Test Description',
+      })),
+      update: jest.fn().mockImplementation((id: number, dto) => ({
+        id,
+        ...dto,
+      })),
+      remove: jest.fn().mockImplementation((id: number) => ({})),
     };
 
     const module: TestingModule = await Test.createTestingModule({
@@ -57,6 +71,53 @@ describe('ServicesController', () => {
       const result = await controller.findAll(1, 10);
       expect(service.findAll).toHaveBeenCalledWith(1, 10);
       expect(result).toEqual([]);
+    });
+  });
+
+  describe('findOne', () => {
+    it('should return a service by id', async () => {
+      const id = '1';
+      const result = await controller.findOne(id);
+      expect(service.findOne).toHaveBeenCalledWith(Number(id));
+      expect(result).toEqual({
+        id: Number(id),
+        name: 'Test Service',
+        category: 'Test Category',
+        price: 100,
+        description: 'Test Description',
+      });
+    });
+  });
+
+  describe('update', () => {
+    it('should update a service and return status 200', async () => {
+      const id = '1';
+      const updateServiceDto = {
+        name: 'Updated Service',
+        category: 'Updated Category',
+        price: 150,
+        description: 'Updated Description',
+      };
+
+      const result = await controller.update(id, updateServiceDto);
+
+      expect(service.update).toHaveBeenCalledWith(
+        Number(id),
+        updateServiceDto,
+      );
+      expect(result).toEqual({
+        id: Number(id),
+        ...updateServiceDto,
+      });
+    });
+  });
+
+  describe('remove', () => {
+    it('should remove a service and return status 200', async () => {
+      const id = '1';
+      const result = await controller.remove(id);
+      expect(service.remove).toHaveBeenCalledWith(Number(id));
+      expect(result).toEqual({});
     });
   });
 });
