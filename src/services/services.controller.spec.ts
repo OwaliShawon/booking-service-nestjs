@@ -12,6 +12,7 @@ describe('ServicesController', () => {
         id: 1,
         ...dto,
       })),
+      findAll: jest.fn().mockImplementation((page: number, limit: number) => []),
     };
 
     const module: TestingModule = await Test.createTestingModule({
@@ -48,6 +49,14 @@ describe('ServicesController', () => {
         id: 1,
         ...createServiceDto,
       });
+    });
+  });
+
+  describe('findAll', () => {
+    it('should return an array of services', async () => {
+      const result = await controller.findAll(1, 10);
+      expect(service.findAll).toHaveBeenCalledWith(1, 10);
+      expect(result).toEqual([]);
     });
   });
 });
