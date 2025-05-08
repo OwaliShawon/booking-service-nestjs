@@ -23,8 +23,8 @@ export class ServicesService {
     });
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} service`;
+  async findOne(id: number) {
+    return await this.serviceRepo.findOneBy({ id });
   }
 
   update(id: number, updateServiceDto: UpdateServiceDto) {
