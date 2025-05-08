@@ -27,8 +27,8 @@ export class ServicesService {
     return await this.serviceRepo.findOneBy({ id });
   }
 
-  update(id: number, updateServiceDto: UpdateServiceDto) {
-    return `This action updates a #${id} service`;
+  async update(id: number, updateServiceDto: UpdateServiceDto) {
+    return await this.serviceRepo.update(id, updateServiceDto);
   }
 
   remove(id: number) {
