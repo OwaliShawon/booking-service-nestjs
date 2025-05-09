@@ -68,4 +68,33 @@ describe('BookingsController', () => {
       expect(result).toEqual(mockResult);
     });
   });
+
+  describe('findOne', () => {
+    it('should return a booking by id', async () => {
+      const id = '1';
+      const mockBooking = {
+        id: 1,
+        customerName: 'Owali Shawon',
+        phone: '01521320960',
+        schedule: new Date('2025-05-10T10:00:00.000Z'),
+        status: 'Pending',
+        service: {
+          id: 1,
+          name: 'Service Name',
+          category: 'Service Name',
+          price: 10.1,
+          description: 'Service Description',
+          createdAt: new Date('2025-05-09T01:02:48.179Z'),
+          updatedAt: new Date('2025-05-09T01:02:48.179Z'),
+        },
+      };
+
+      jest.spyOn(service, 'findById').mockResolvedValue(mockBooking);
+
+      const result = await controller.findOne(id);
+
+      expect(service.findById).toHaveBeenCalledWith(Number(id));
+      expect(result).toEqual(mockBooking);
+    });
+  });
 });
