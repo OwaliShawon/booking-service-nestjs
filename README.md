@@ -1,33 +1,86 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="200" alt="Nest Logo" /></a>
-</p>
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://coveralls.io/github/nestjs/nest?branch=master" target="_blank"><img src="https://coveralls.io/repos/github/nestjs/nest/badge.svg?branch=master#9" alt="Coverage" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+# Service Booking Platform Backend (Mini Sheba.xyz)
+Developed with [Nest](https://github.com/nestjs/nest) framework TypeScript a simple  backend for booking services like cleaning, plumbing, etc.
 
-## Description
+---
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+## Features
 
+- View available services (paginated)
+- Book a service with name, phone, email, schedule
+- Check booking status via booking ID
+- Admin APIs:
+  - Manage services (CRUD)
+  - View all bookings
+- JWT-based Admin Login
+- Email/SMS Notifications on booking
+- Docker + PostgreSQL setup
+
+---
+
+## Tech Stack
+
+- **NestJS** (TypeORM, REST)
+- **PostgreSQL**
+- **JWT Auth**
+- **Nodemailer**
+- **Docker & Docker Compose**
+
+---
+
+# Running Locally
+
+### 1. Clone and Setup
+
+```bash
+git clone https://github.com/OwaliShawon/booking-service-nestjs.git
+cd booking-service-nestjs
+```
+
+
+## Add Environment .env
+#### Update the environments carefully and safely, some are must need update like TWILIO OR SMTP
+```bash
+POSTGRES_USER=postgres
+POSTGRES_PASSWORD=pass
+POSTGRES_DB=booking-services
+REDIS_PASSWORD=pass
+DATABASE_URL=postgresql://postgres:pass@host.docker.internal:5432/booking-services?schema=public
+DBGATE_DEFAULT_CONNECTION=postgresql://postgres:pass@db:5432/booking-services
+
+JWT_SECRET=secret
+JWT_EXPIRES_IN=1d
+DEFAULT_ADMIN_USERNAME=admin
+DEFAULT_ADMIN_PASSWORD=admin123
+
+SMTP_HOST=smtp.example.com
+SMTP_PORT=587
+SMTP_USER=your_email@example.com
+SMTP_PASS=your_email_password
+
+TWILIO_ACCOUNT_SID=your_twilio_account_sid
+TWILIO_AUTH_TOKEN=your_twilio_auth_token
+TWILIO_PHONE_NUMBER=your_twilio_phone_number
+```
+
+
+# Docker Compose
+### Start the Application
+```bash
+docker-compose up --build
+```
+### Stop the Application
+```bash
+docker-compose down
+```
+### Clean Up Containers and Volumes
+```
+docker-compose down -v
+```
+
+# Host Terminal
 ## Installation
-
 ```bash
 $ npm install
 ```
@@ -58,16 +111,51 @@ $ npm run test:e2e
 $ npm run test:cov
 ```
 
-## Support
+# Admin Credentials
+#### Admin credential is static if you changed in env then use yours
+```
+username: admin
+password: admin123
+```
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+## 📜 Swagger Documentation
 
-## Stay in touch
+Swagger is available at: [http://localhost:3000/api](http://localhost:3000/api)
 
-- Author - [Kamil Myśliwiec](https://kamilmysliwiec.com)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+### Steps to Use:
+1. Open the Swagger URL in your browser.
+2. Use the `POST /auth/login` endpoint to log in as an admin.
+3. Copy the JWT token from the response.
+4. Click the "Authorize" button in Swagger and paste the token (with `Bearer ` prefix).
+5. Access the secure admin APIs.
 
-## License
+## 📖 API Endpoints
 
-Nest is [MIT licensed](LICENSE).
+### Public APIs
+- `GET /services` - View available services (paginated)
+- `GET /services/:id` - View details of a specific service
+- `POST /bookings` - Book a service
+- `GET /bookings/:id` - Check booking status by ID
+
+### Admin APIs (Require JWT Token)
+- `POST /auth/login` - Admin login
+- `GET /admin/bookings` - View all bookings
+- `POST /admin/services` - Create a new service
+- `PUT /admin/services/:id` - Update a service
+- `DELETE /admin/services/:id` - Delete a service
+
+## 🛠 Troubleshooting
+
+### Common Issues
+
+- **JWT Token Not Working in Swagger**
+  - Ensure the token is prefixed with `Bearer ` when authorizing in Swagger.
+  - Check that the `JWT_SECRET` in `.env` matches the one used in the application.
+
+- **Database Connection Issues**
+  - Ensure PostgreSQL is running and the credentials in `.env` are correct.
+  - If using Docker, ensure the `DATABASE_URL` points to the correct host.
+
+- **Email/SMS Notifications Not Working**
+  - Verify the SMTP and Twilio credentials in `.env`.
+  - Check the logs for any errors related to email or SMS services.
