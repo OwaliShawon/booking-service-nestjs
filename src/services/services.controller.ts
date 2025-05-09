@@ -15,12 +15,13 @@ import { UpdateServiceDto } from './dto/update-service.dto';
 import { JwtAuthGuard } from 'src/guards/jwt-auth.guard';
 import { ApiBearerAuth } from '@nestjs/swagger';
 
-@UseGuards(JwtAuthGuard)
-@ApiBearerAuth()
+
 @Controller('services')
 export class ServicesController {
   constructor(private readonly servicesService: ServicesService) {}
 
+  @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth()
   @Post()
   create(@Body() createServiceDto: CreateServiceDto) {
     return this.servicesService.create(createServiceDto);
@@ -36,11 +37,15 @@ export class ServicesController {
     return this.servicesService.findOne(+id);
   }
 
+  @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth()
   @Patch(':id')
   update(@Param('id') id: string, @Body() updateServiceDto: UpdateServiceDto) {
     return this.servicesService.update(+id, updateServiceDto);
   }
 
+  @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth()
   @Delete(':id')
   remove(@Param('id') id: string) {
     return this.servicesService.remove(+id);
