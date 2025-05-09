@@ -36,4 +36,8 @@ export class BookingsService {
     if (!booking) throw new NotFoundException('Booking not found');
     return booking;
   }
+
+  async findAll() {
+    return this.bookingRepo.find({ relations: ['service'] });
+  }
 }

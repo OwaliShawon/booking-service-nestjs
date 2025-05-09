@@ -9,5 +9,6 @@ import { Service } from 'src/services/entities/service.entity';
   imports: [TypeOrmModule.forFeature([Booking, Service])],
   controllers: [BookingsController],
   providers: [BookingsService],
+  exports: [BookingsService],
 })
 export class BookingsModule {}
