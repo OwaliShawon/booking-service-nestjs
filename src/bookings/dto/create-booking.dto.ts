@@ -10,6 +10,9 @@ export class CreateBookingDto {
   @ApiProperty({ default: '01521320960' })
   phone: string;
 
+  @ApiProperty({ default: 'owali.shawon@gmail.com' })
+  email: string;
+
   @ApiProperty({ default: '2025-05-10T10:00:00.000Z' })
   schedule: Date;
 }

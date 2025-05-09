@@ -8,8 +8,16 @@ import { BookingsModule } from './bookings/bookings.module';
 import { Booking } from './bookings/entities/booking.entity';
 import { AuthModule } from './auth/auth.module';
 import { AdminModule } from './admin/admin.module';
+import { NotificationModule } from './notification/notification.module';
+import { ConfigModule } from '@nestjs/config';
 @Module({
   imports: [
+    ConfigModule.forRoot({
+      envFilePath: process.env.NODE_ENV
+        ? `.env.${process.env.NODE_ENV || 'development'}`
+        : '.env',
+      isGlobal: true,
+    }),
     TypeOrmModule.forRoot({
       type: 'postgres',
       host: 'localhost',
@@ -24,6 +32,7 @@ import { AdminModule } from './admin/admin.module';
     BookingsModule,
     AuthModule,
     AdminModule,
+    NotificationModule,
   ],
   controllers: [AppController],
   providers: [AppService],

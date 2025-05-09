@@ -3,6 +3,8 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Booking } from './entities/booking.entity';
 import { Repository } from 'typeorm';
 import { Service } from '../services/entities/service.entity';
+import { NotificationService } from 'src/notification/notification.service';
+import { CreateBookingDto } from './dto/create-booking.dto';
 
 @Injectable()
 export class BookingsService {
@@ -11,20 +13,26 @@ export class BookingsService {
     private bookingRepo: Repository<Booking>,
     @InjectRepository(Service)
     private serviceRepo: Repository<Service>,
+    private notificationService: NotificationService,
   ) {}
 
-  async create(data: {
-    customerName: string;
-    phone: string;
-    schedule: Date;
-    serviceId: number;
-  }) {
+  async create(data: CreateBookingDto) {
     const service = await this.serviceRepo.findOne({
       where: { id: data.serviceId },
     });
     if (!service) throw new NotFoundException('Service not found');
 
     const booking = this.bookingRepo.create({ ...data, service });
+
+    this.notificationService.sendBookingConfirmationSms(data.phone, {
+      schedule: data.schedule,
+      serviceName: service.name,
+    });
+    this.notificationService.sendBookingConfirmationEmail(data.email, {
+      schedule: data.schedule,
+      serviceName: service.name,
+    });
+
     return this.bookingRepo.save(booking);
   }
 
