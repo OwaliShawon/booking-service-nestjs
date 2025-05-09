@@ -6,6 +6,7 @@ import { ServicesModule } from './services/services.module';
 import { Service } from './services/entities/service.entity';
 import { BookingsModule } from './bookings/bookings.module';
 import { Booking } from './bookings/entities/booking.entity';
+import { AuthModule } from './auth/auth.module';
 @Module({
   imports: [
     TypeOrmModule.forRoot({
@@ -20,6 +21,7 @@ import { Booking } from './bookings/entities/booking.entity';
     }),
     ServicesModule,
     BookingsModule,
+    AuthModule,
   ],
   controllers: [AppController],
   providers: [AppService],
