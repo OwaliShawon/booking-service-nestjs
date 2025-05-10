@@ -42,26 +42,8 @@ cd booking-service-nestjs
 ## Add Environment .env
 #### Update the environments carefully and safely, some are must need update like TWILIO OR SMTP
 ```bash
-POSTGRES_USER=postgres
-POSTGRES_PASSWORD=pass
-POSTGRES_DB=booking-services
-REDIS_PASSWORD=pass
-DATABASE_URL=postgresql://postgres:pass@host.docker.internal:5432/booking-services?schema=public
-DBGATE_DEFAULT_CONNECTION=postgresql://postgres:pass@db:5432/booking-services
-
-JWT_SECRET=secret
-JWT_EXPIRES_IN=1d
-DEFAULT_ADMIN_USERNAME=admin
-DEFAULT_ADMIN_PASSWORD=admin123
-
-SMTP_HOST=smtp.example.com
-SMTP_PORT=587
-SMTP_USER=your_email@example.com
-SMTP_PASS=your_email_password
-
-TWILIO_ACCOUNT_SID=your_twilio_account_sid
-TWILIO_AUTH_TOKEN=your_twilio_auth_token
-TWILIO_PHONE_NUMBER=your_twilio_phone_number
+.env.example for local
+.env.development for docker
 ```
 
 
